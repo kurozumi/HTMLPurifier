@@ -13,18 +13,31 @@
 namespace Plugin\HTMLPurifier\Form\Extension;
 
 
+use Eccube\Request\Context;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TextTypeExtension extends AbstractTypeExtension
 {
+    /**
+     * @var Context
+     */
+    private $context;
+
+    public function __construct(Context $context)
+    {
+        $this->context = $context;
+    }
+
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver
-            ->setDefaults([
-                'purify_html' => true,
-            ]);
+        if ($this->context->isFront()) {
+            $resolver
+                ->setDefaults([
+                    'purify_html' => true,
+                ]);
+        }
     }
 
     /**
