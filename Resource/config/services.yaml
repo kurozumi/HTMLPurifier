@@ -1,0 +1,4 @@
+services:
+  Plugin\HTMLPurifier\Form\Extension\TextTypeExtension:
+    tags:
+      - { name: form.type_extension, priority: -999, extended_type: Symfony\Component\Form\Extension\Core\Type\TextType}
