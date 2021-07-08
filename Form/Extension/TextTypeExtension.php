@@ -14,8 +14,10 @@ namespace Plugin\HTMLPurifier\Form\Extension;
 
 
 use Eccube\Request\Context;
+use Plugin\HTMLPurifier\Form\EventListener\HTMLPurifierListener;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TextTypeExtension extends AbstractTypeExtension
@@ -25,18 +27,22 @@ class TextTypeExtension extends AbstractTypeExtension
      */
     private $context;
 
+    /**
+     * TextTypeExtension constructor.
+     * @param Context $context
+     */
     public function __construct(Context $context)
     {
         $this->context = $context;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver): void
     {
         if ($this->context->isFront()) {
-            $resolver
-                ->setDefaults([
-                    'purify_html' => true,
-                ]);
+            $resolver->setDefault('purify_html', true);
         }
     }
 
@@ -54,5 +60,18 @@ class TextTypeExtension extends AbstractTypeExtension
     public static function getExtendedTypes(): iterable
     {
         yield TextType::class;
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        if ($options['purify_html']) {
+            $builder->addEventSubscriber(
+                new HTMLPurifierListener()
+            );
+        }
     }
 }
