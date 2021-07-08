@@ -10,9 +10,10 @@ $ composer require exercise/htmlpurifier-bundle
 $ git clone git@github.com:kurozumi/HTMLPurifier.git app/Plugin
 $ bin/console e:p:i --code HTMLPurifier
 $ bin/console e:p:e --code HTMLPurifier
-
+```
 or
 
+```bash
 $ bin/console eccube:composer:require exercise/htmlpurifier-bundle
 $ git clone git@github.com:kurozumi/HTMLPurifier.git app/Plugin
 $ bin/console e:p:i --code HTMLPurifier
