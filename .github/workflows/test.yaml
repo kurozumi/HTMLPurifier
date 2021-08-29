@@ -7,7 +7,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        eccube-versions: ['4.0', '4.1']
+        eccube-versions: ['4.0']
         php-versions: [7.1,7.2,7.3,7.4]
         database: [mysql, pgsql]
         include:
@@ -47,16 +47,7 @@ jobs:
           repository: EC-CUBE/ec-cube
           ref: ${{ matrix.eccube-versions }}
 
-      - name: Setup PHP, with composer and extensions for EC-CUBE4.0
-        if: matrix.eccube-versions == '4.0'
-        uses: shivammathur/setup-php@master #https://github.com/shivammathur/setup-php
-        with:
-          php-version: ${{ matrix.php-versions }}
-          extensions: mbstring, xml, ctype, iconv, mysql, intl
-          tools: composer:v1
-
       - name: Setup PHP, with composer and extensions
-        if: matrix.eccube-versions != '4.0'
         uses: shivammathur/setup-php@master #https://github.com/shivammathur/setup-php
         with:
           php-version: ${{ matrix.php-versions }}
@@ -79,10 +70,6 @@ jobs:
       - name: Install Composer dependencies
         run: |
           composer install --no-progress --prefer-dist --optimize-autoloader
-
-      - name: Install Composer dependencies for EC-CUBE4.0
-        if: matrix.eccube-versions == '4.0'
-        run: |
           composer require exercise/htmlpurifier-bundle
           composer require --dev kiy0taka/eccube4-test-fixer
 
@@ -102,20 +89,11 @@ jobs:
           DATABASE_SERVER_VERSION: ${{ matrix.database_server_version }}
 
       - name: Run Tests for EC-CUBE4.0
-        if: matrix.eccube-versions == '4.0'
         run: |
           find app/Plugin/${{ github.event.repository.name }}/Tests -name "*Test.php" | while read TESTCASE
           do
             bin/phpunit --include-path vendor/kiy0taka/eccube4-test-fixer/src --loader 'Eccube\PHPUnit\Loader\Eccube4CompatTestSuiteLoader' ${TESTCASE}
           done
-        env:
-          DATABASE_URL: ${{ matrix.database_url }}
-          DATABASE_SERVER_VERSION: ${{ matrix.database_server_version }}
-
-      - name: Run Tests
-        if: matrix.eccube-versions != '4.0'
-        run: |
-          bin/phpunit app/Plugin/${{ github.event.repository.name }}/Tests
         env:
           DATABASE_URL: ${{ matrix.database_url }}
           DATABASE_SERVER_VERSION: ${{ matrix.database_server_version }}
