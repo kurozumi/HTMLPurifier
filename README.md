@@ -1,6 +1,6 @@
 # HTMLPurifier for EC-CUBE4
 
-This plug-in integrates [HTMLPurifier](http://htmlpurifier.org/) into [EC-CUBE4](https://github.com/EC-CUBE/ec-cube).
+This plug-in integrates [HTMLPurifier](http://htmlpurifier.org/) into [EC-CUBE4.0](https://github.com/EC-CUBE/ec-cube).
 
 ## Installation
 
